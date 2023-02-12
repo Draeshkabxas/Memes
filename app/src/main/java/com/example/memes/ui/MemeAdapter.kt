@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.ImageLoader
 import coil.load
 import com.example.memes.databinding.MemeItemBinding
 import com.example.memes.model.Meme
+import javax.inject.Inject
 
 
-class MemeAdapter : ListAdapter<Meme, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+class MemeAdapter @Inject constructor(private  val imageLoader: ImageLoader): ListAdapter<Meme, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Meme>() {
 
@@ -26,6 +28,7 @@ class MemeAdapter : ListAdapter<Meme, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
         }
     }
+     lateinit var onLoad:OnLoad
 
     private lateinit var binding: MemeItemBinding
 
@@ -36,6 +39,9 @@ class MemeAdapter : ListAdapter<Meme, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(position == itemCount - 5 && itemCount < 150){
+            onLoad.onLoadItem(itemCount + 10)
+        }
         if (holder is ViewHolder) {
             val item = getItem(position)
             holder.bind(item, position)
@@ -47,7 +53,11 @@ class MemeAdapter : ListAdapter<Meme, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
         fun bind(item: Meme, position: Int) {
             itemBinding.autherTV.text = item.author
             itemBinding.titleTV.text = item.title
-            itemBinding.memeImg.load(item.url)
+            itemBinding.memeImg.load(item.url, imageLoader = imageLoader)
         }
+    }
+
+    interface OnLoad{
+        fun onLoadItem(count:Int)
     }
 }

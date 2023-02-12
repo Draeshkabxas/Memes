@@ -4,5 +4,5 @@ import com.example.memes.utlis.Resource
 
 interface MemeApi {
 
-    suspend fun getMemes():Resource<List<Meme>>
+    suspend fun getMemes(count:Int):Resource<List<Meme>>
 }

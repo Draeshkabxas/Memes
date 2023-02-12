@@ -9,10 +9,10 @@ import io.ktor.client.request.*
 
 
 class MemeApiImpl(private val client: HttpClient):MemeApi{
-    override suspend fun getMemes(): Resource<List<Meme>> {
+    override suspend fun getMemes(count:Int): Resource<List<Meme>> {
         return try {
             val response:MemeResponse = client.get {
-                url("https://meme-api.com/gimme/10")
+                url(Routes.MEMES+count)
             }.body()
             Resource.Success(response.memes)
         } catch (e: RedirectResponseException) {

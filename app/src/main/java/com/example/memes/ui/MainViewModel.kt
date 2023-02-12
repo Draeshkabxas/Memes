@@ -17,11 +17,11 @@ class MainViewModel @Inject constructor(private val memeApi: MemeApi):ViewModel(
     val meme: LiveData<Resource<List<Meme>>> get() = _memes
 
     init{
-        getMeme()
+        getMeme(20)
     }
-    fun getMeme() {
+    fun getMeme(count:Int) {
         viewModelScope.launch {
-            _memes.value = memeApi.getMemes()
+            _memes.value =memeApi.getMemes(count)
         }
     }
 }
